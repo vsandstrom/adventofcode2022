@@ -26,11 +26,12 @@ fn calc1(lhs: &str, rhs: &str, rps: &HashMap<String, u32>, combo: &HashMap<(Stri
         Some(v) => val += v,
         None => ()
     }
+
     val += rps[rhs];
     val
 }
 
-fn calc2(lhs: &str, rhs: &str, index: &HashMap<String, u32>, rps: &HashMap<String, u32>, order: &Vec<&str>) -> u32 {
+fn calc2(lhs: &str, rhs: &str) -> u32 {
     let mut val = 0;
     match rhs {
         "Z" => val += 6 + match lhs{
@@ -53,22 +54,19 @@ fn calc2(lhs: &str, rhs: &str, index: &HashMap<String, u32>, rps: &HashMap<Strin
             },
         _ => () 
 
-
         }
     val
 }
 
-    // let i = rps[&lhs.to_string()] as usize;
-    // let plh = order[i -1].to_string();
-    // val += (rps[&plh] + index[rhs]) % order.len() as u32;
-    // let mut temp = rps[&(plh + index[rhs] % order.len())];
-
-
-
 fn main() {
     let data = parse("input.txt");
-    let data = data.iter().map(|x| x.to_string().split(' ').map(|y| y.to_string()).collect::<Vec<String>>()).into_iter();
-    let order = vec!["A", "B", "C"];
+    let data = data
+        .iter()
+        .map(|x| x.to_string()
+             .split(' ')
+             .map(|y| y.to_string())
+                .collect::<Vec<String>>())
+        .into_iter();
 
     let combo: HashMap<(String, String), u32> = HashMap::from([
                                                               (('A'.to_string(), 'Y'.to_string()), 6),
@@ -88,25 +86,20 @@ fn main() {
                                                       ('Z'.to_string(), 3),
     ]);
 
-    let index: HashMap<String, u32> = HashMap::from([('X'.to_string(), 1), ('Z'.to_string(), 2), ('Y'.to_string(), 0)]);
-
-
-
-
     let mut sum: u32 = 0;
-
     for item in data.clone() {
         sum += calc1(&item[0], &item[1], &rps, &combo);
     }
     println!("{}", sum);
-    sum = 0;
 
+    sum = 0;
     for item in data.clone() {
-        sum += calc2(&item[0], &item[1], &index, &rps, &order);
+        sum += calc2(&item[0], &item[1]);
     }
 
     println!("{}", sum);
 }
+
 
 #[cfg(test)]
 mod tests {
@@ -142,27 +135,16 @@ mod tests {
 
     #[test]
     fn test2() {
-    let order = vec!["A", "B", "C"];
     let data = parse("test.txt");
     let data = data.iter().map(|x| x.to_string().split(' ').map(|y| y.to_string()).collect::<Vec<String>>()).into_iter();
 
-    let rps: HashMap<String, u32> = HashMap::from([
-                                                      ('A'.to_string(), 1),
-                                                      ('X'.to_string(), 1),
-                                                      ('B'.to_string(), 2),
-                                                      ('Y'.to_string(), 2),
-                                                      ('C'.to_string(), 3),
-                                                      ('Z'.to_string(), 3),
-    ]);
-
-    let index: HashMap<String, u32> = HashMap::from([('X'.to_string(), 2), ('Z'.to_string(), 1), ('Y'.to_string(), 0)]);
-
     let mut sum = 0;
     for item in data.clone() {
-        let temp = calc2(&item[0], &item[1], &index, &rps, &order);
+        let temp = calc2(&item[0], &item[1]);
         println!("{}", temp);
         sum += temp;
     }
     assert_eq!(12, sum);
+
     }
 }
