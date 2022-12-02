@@ -7,9 +7,6 @@ use std::collections::HashMap;
 /// du får fortfarande poäng när du förlorar
 ///
 
-
-
-
 fn parse(text: &str) -> Vec<String> {
     let data = std::fs::read_to_string(text)
         .expect("error reading file")
