@@ -10,16 +10,10 @@ fn parse(path: &str) -> Result<String, std::io::Error>{
 
 fn findBadge(first: &str, second: &str, third: &str) -> Option<char> {
     for char in first.chars() {
-        match second.contains(char) {
-            true => {
-                match third.contains(char) {
-                    true => {
-                        return Some(char)
-                    },
-                    false => continue
-                }
-            },
-            false => continue
+        if second.contains(char) {
+            if third.contains(char) {
+                return Some(char)
+            }
         } 
     }
     None
@@ -38,21 +32,18 @@ fn priority(c: char) -> u32 {
 fn task1(input: &str) -> u32 {
     let mut resp = 0;
     for line in input.lines() {
-        let compartment = line.split_at(line.len() / 2);
-        match compartment {
+        let compartments = line.split_at(line.len() / 2);
+        match compartments {
             (x, y) => {
                 for char in x.chars() {
-                    match y.contains(char) {
-                        true => {
-                            if char as u32 >= 97 {
-                                resp += priority(char);
-                                break
-                            } else {
-                                resp += priority(char);
-                                break
-                            }
-                        },
-                        false => resp += 0
+                    if y.contains(char) {
+                        if char as u32 >= 97 {
+                            resp += priority(char);
+                            break
+                        } else {
+                            resp += priority(char);
+                            break
+                        }
                     }
                 }
             },
@@ -77,8 +68,8 @@ fn task2(input: &str) -> u32 {
         }
         i += 3;
     }
-    
     resp
+
 }
 
 fn main() {
