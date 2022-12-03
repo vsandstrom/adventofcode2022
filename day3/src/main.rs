@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+use std::cmp::Ordering;
+
 const LOWER: u32 = 96;
 const UPPER: u32 = 38;
 
@@ -7,6 +9,41 @@ fn parse(path: &str) -> Result<String, std::io::Error>{
     let f = std::fs::read_to_string(path);
     f
 }
+
+fn longest(a: &String, b: &String) -> Ordering {
+    let longest = a.len().cmp(&b.len());
+    if longest == Ordering::Equal {
+        return b.cmp(&a);
+    }
+    return longest;
+}
+
+fn findBadge(first: &str, second: &str, third: &str) -> Option<char> {
+    for char in first.chars() {
+        match second.chars().position(|c| c == char) {
+            Some(_) => {
+                match third.chars().position(|c| c == char) {
+                    Some(_) => {
+                        return Some(char)
+                    },
+                    None => continue
+                }
+            },
+            None => continue
+        } 
+    }
+    None
+}
+
+fn priority(c: char) -> u32 {
+    if c as u32 >= 97 {
+        return *&c as u32 - LOWER;
+    } else {
+        return *&c as u32 - UPPER;
+    }
+}
+
+
 
 fn task1(input: &str) -> u32 {
     let mut resp = 0;
@@ -19,11 +56,10 @@ fn task1(input: &str) -> u32 {
                     match y.chars().position(|x| x == char) {
                         Some(_) => {
                             if char as u32 >= 97 {
-                                resp += *&char as u32 - LOWER;
+                                resp += priority(char);
                                 break
-
                             } else {
-                                resp += *&char as u32 - UPPER;
+                                resp += priority(char);
                                 break
                             }
                         },
@@ -36,6 +72,26 @@ fn task1(input: &str) -> u32 {
     resp
 }
 
+fn task2(input: &str) -> u32 {
+    let mut resp = 0;
+    let mut i = 3;
+    let input = input.lines().collect::<Vec<&str>>();
+
+    while i <= input.len() {
+        // let badge = findBadge(input[i-3], input[i-2], input[i-1]);
+        let badge = findBadge(&input[i-3], &input[i-2], &input[i-1]);
+        match badge {
+            Some(c) => {
+                resp += priority(c)
+            },
+            None => resp += 0
+        }
+        i += 3;
+    }
+    
+    resp
+}
+
 fn main() {
     // Normalizing numbers
     let input = match parse("input.txt") {
@@ -44,7 +100,8 @@ fn main() {
     };
 
     println!("||==================|| DAY 3 ||==================||");
-    println!("|| Sum of priority: {}", task1(&input));
+    println!("|| Sum of priority: {}                         ||", task1(&input));
+    println!("|| Sum of priority of badge groups: {}         ||", task2(&input));
     println!("||===============================================||");
 
 
@@ -57,29 +114,63 @@ fn main() {
 mod tests {
 use super::*;
 
-#[test]
-fn test1() {
-    let input = parse("test.txt").unwrap();
-    assert_eq!(task1(&input), 157);
-}
+    #[test]
+    fn test1() {
+        let input = parse("test.txt").unwrap();
+        assert_eq!(task1(&input), 157);
+    }
 
-#[test]
-fn test2() {
-    todo!()
-}
+    #[test]
+    fn test2() {
+        let input = parse("test2.txt").unwrap();
+        assert_eq!(task2(&input), 70);
+    }
 
+    #[test]
+    fn test3() {
+        let input = parse("test2.txt").unwrap();
+        let input = input.lines().collect::<Vec<&str>>();
+        let badge = findBadge(input[3], input[4], input[5]);
+        assert_eq!(badge.unwrap(), 'Z');
+    }
+    
+    #[test]
+    fn test4() {
+        let mut sum = 0;
+        let input = parse("test2.txt").unwrap();
+        let input = input.lines().collect::<Vec<&str>>();
+        let badge = findBadge(&input[0], &input[1], &input[2]);
+        match badge {
+            Some(c) =>  sum += priority(c),
+            None => sum += 0
+        }
+        let badge = findBadge(input[3], input[4], input[5]);
+        match badge {
+            Some(c) => sum += priority(c),
+            None => sum += 0
+        }
 
-#[test]
-#[ignore]
-fn asciitest(){
-    // let a = getAcsciiValue(&'a');
-    assert_eq!(a, 97);
-}
+        assert_eq!(sum, 70);
+    }
 
-#[test]
-#[ignore]
-fn asciitest2(){
-    // let aa = getAcsciiValue(&'A');
-    assert_eq!(aa, 65);
-}
+    #[test]
+    fn test5 (){
+        let input = parse("test2.txt").unwrap();
+        let input = input.lines().collect::<Vec<&str>>();
+        let mut i = 3;
+        let mut resp = 0;
+        while i <= input.len() {
+            // let badge = findBadge(input[i-3], input[i-2], input[i-1]);
+            let badge = findBadge(&input[i-3], &input[i-2], &input[i-1]);
+            match badge {
+                Some(c) => {
+                    resp += priority(c)
+                },
+                None => resp += 0
+            }
+            i += 3;
+        }
+
+        assert_eq!(resp, 70);
+    }
 }
