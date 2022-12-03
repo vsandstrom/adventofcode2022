@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::cmp::Ordering;
-
 const LOWER: u32 = 96;
 const UPPER: u32 = 38;
 
@@ -10,26 +8,18 @@ fn parse(path: &str) -> Result<String, std::io::Error>{
     f
 }
 
-fn longest(a: &String, b: &String) -> Ordering {
-    let longest = a.len().cmp(&b.len());
-    if longest == Ordering::Equal {
-        return b.cmp(&a);
-    }
-    return longest;
-}
-
 fn findBadge(first: &str, second: &str, third: &str) -> Option<char> {
     for char in first.chars() {
-        match second.chars().position(|c| c == char) {
-            Some(_) => {
-                match third.chars().position(|c| c == char) {
-                    Some(_) => {
+        match second.contains(char) {
+            true => {
+                match third.contains(char) {
+                    true => {
                         return Some(char)
                     },
-                    None => continue
+                    false => continue
                 }
             },
-            None => continue
+            false => continue
         } 
     }
     None
@@ -48,13 +38,12 @@ fn priority(c: char) -> u32 {
 fn task1(input: &str) -> u32 {
     let mut resp = 0;
     for line in input.lines() {
-        // varje ficka innehåller exakt lika många objekt.
-        let comp = line.split_at(line.len() / 2);
-        match comp {
+        let compartment = line.split_at(line.len() / 2);
+        match compartment {
             (x, y) => {
                 for char in x.chars() {
-                    match y.chars().position(|x| x == char) {
-                        Some(_) => {
+                    match y.contains(char) {
+                        true => {
                             if char as u32 >= 97 {
                                 resp += priority(char);
                                 break
@@ -63,7 +52,7 @@ fn task1(input: &str) -> u32 {
                                 break
                             }
                         },
-                        None => resp += 0
+                        false => resp += 0
                     }
                 }
             },
@@ -103,11 +92,7 @@ fn main() {
     println!("|| Sum of priority: {}                         ||", task1(&input));
     println!("|| Sum of priority of badge groups: {}         ||", task2(&input));
     println!("||===============================================||");
-
-
 }
-
-
 
 
 #[cfg(test)]
