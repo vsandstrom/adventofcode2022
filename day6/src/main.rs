@@ -1,21 +1,23 @@
 use std::collections::HashSet;
 
 const STARTPOSITION: u32 = 4;
+const STARTPOSITION2: u32 = 14;
+
 
 fn parse(path: &str) -> Result<String, std::io::Error>{
     return std::fs::read_to_string(path);
 }
 
-fn task1(input: &Vec<char>) -> u32 {
-    let mut index = STARTPOSITION;
-    for win in input.windows(4) {
+fn task(input: &Vec<char>, limit: u32) -> u32 {
+    let mut index = limit;
+    for win in input.windows(limit as usize) {
         let mut hs: HashSet<char> = HashSet::new();
         let mut count = 0;
-        for i in 0..4 {
-            match hs.insert(win[i]) {
+        for i in 0..limit {
+            match hs.insert(win[i as usize]) {
                 true => {
                     count += 1;
-                    if count == 4 {
+                    if count == limit {
                         return index;
                     }
                 },
@@ -36,5 +38,9 @@ fn main() {
     // remove '\n' at the end
     input.pop();
     input.as_slice();
-    println!("{}", task1(&input));
+
+    println!("||==================|| DAY 6 ||==================||");
+    println!("|| Start-of-packet: {}                         ||", task(&input, STARTPOSITION));
+    println!("|| Start-of-message: {}                        ||", task(&input, STARTPOSITION2));
+    println!("||===============================================||");
 }
