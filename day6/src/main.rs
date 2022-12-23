@@ -39,6 +39,7 @@ fn main() {
     input.pop();
     input.as_slice();
 
+    
     println!("||==================|| DAY 6 ||==================||");
     println!("|| Start-of-packet: {}                         ||", task(&input, STARTPOSITION));
     println!("|| Start-of-message: {}                        ||", task(&input, STARTPOSITION2));

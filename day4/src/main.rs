@@ -51,8 +51,12 @@ fn task2(input: &str, regex: &Regex) -> u32 {
 fn main() {
     let input = parse("input.txt").unwrap();
     let r = Regex::new(r"([,-]+)").unwrap();
-    println!("{}", task1(&input, &r));
-    println!("{}", task2(&input, &r));
+    println!("||==================|| DAY 4 ||==================||");
+    println!("|| Complete overlap: {}                         ||", task1(&input, &r));
+    println!("|| Partial overlap: {}                          ||", task2(&input, &r));
+    println!("||===============================================||");
+    // println!("{}", task1(&input, &r));
+    // println!("{}", task2(&input, &r));
 }
 
 

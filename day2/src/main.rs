@@ -4,8 +4,6 @@ use std::collections::HashMap;
 ///
 /// loss = 0, draw = 3, win = 6
 ///
-/// du får fortfarande poäng när du förlorar
-///
 
 fn parse(text: &str) -> Vec<String> {
     let data = std::fs::read_to_string(text)
