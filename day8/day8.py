@@ -16,33 +16,11 @@ def visible_trees(forest):
     visible_trees_long = set()
     visible_trees_long_rev = set()
 
-    for i in range(1, len(forest)-1):
-        ltallest = forest[i][0]
-        rtallest = forest[i][len(forest[i])-1]
 
-        for j in range(1, len(forest[i])):
 
-            if forest[i][j] > ltallest:
-                visible_trees_lat.add((i,j))
-                ltallest = forest[i][j]
 
-            if forest[i][len(forest[i])-1-j] > rtallest:
-                visible_trees_lat_rev.add((i, len(forest[i])-1-j))
-                rtallest = forest[i][len(forest[i])-1-j]
-        
-    for j in range(1, len(forest[0])-1):
-        ltallest = forest[0][j]
-        rtallest = forest[len(forest)-1][j]
 
-        for i in range(1, len(forest)):
 
-            if forest[i][j] > ltallest:
-                visible_trees_long.add((i,j))
-                ltallest = forest[i][j]
-
-            if forest[i][len(forest[i])-1-j] > rtallest:
-                visible_trees_long_rev.add((i, len(forest[i])-1-j))
-                rtallest = forest[i][len(forest[i])-1-j]
 
 
     print(visible_trees_lat)
