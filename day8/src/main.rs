@@ -14,6 +14,10 @@ fn parse_forest(input: &str) -> Vec<Vec<i8>>{
     trees
 }
 
+fn calc(coord: (i8, i8), forest: &Vec<Vec<i8>>) -> [u32; 4] {
+    [0,0,0,0]
+}
+
 fn task1(trees: &Vec<Vec<i8>>) -> HashSet<(i8, i8)>{
     let mut visible: HashSet<(i8, i8)> = HashSet::new();
     // -1 for the last row on each run
@@ -61,21 +65,112 @@ fn task1(trees: &Vec<Vec<i8>>) -> HashSet<(i8, i8)>{
     visible
 }
 
-// fn calc(coord: (i8, i8), forest: &Vec<Vec<i8>>) -> [u32; 4] {
-//     [0,0,0,0]
-// }
+
+fn task2(trees: &Vec<Vec<i8>>) -> HashSet<(i8, i8)>{
+    let mut visible: HashSet<(i8, i8)> = HashSet::new();
+    // -1 for the last row on each run
+
+    for i in 0..trees.len() {
+        let mut ltall = -1;
+        for j in 0..trees[i].len() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+            }
+        } 
+    }
+    
+    for i in 0..trees.len() {
+        let mut ltall = -1;
+        for j in (0..trees[i].len()).rev() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+            }
+        } 
+    }
+    
+    for j in 0..trees[0].len() {
+        let mut ltall = -1;
+        for i in 0..trees.len() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+        }
+        } 
+    }
+    
+    for j in 0..trees[0].len() {
+        let mut ltall = -1;
+        for i in (0..trees.len()).rev() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+            }
+        } 
+    }
+
+    visible
+}
+
+
+fn task2(trees: &Vec<Vec<i8>>) -> HashSet<(i8, i8)>{
+    let mut visible: HashSet<(i8, i8)> = HashSet::new();
+    // -1 for the last row on each run
+
+    for i in 0..trees.len() {
+        let mut ltall = -1;
+        for j in 0..trees[i].len() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+            }
+        } 
+    }
+    
+    for i in 0..trees.len() {
+        let mut ltall = -1;
+        for j in (0..trees[i].len()).rev() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+            }
+        } 
+    }
+    
+    for j in 0..trees[0].len() {
+        let mut ltall = -1;
+        for i in 0..trees.len() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+        }
+        } 
+    }
+    
+    for j in 0..trees[0].len() {
+        let mut ltall = -1;
+        for i in (0..trees.len()).rev() {
+            if trees[i][j] > ltall {
+                visible.insert((i as i8, j as i8));
+                ltall = trees[i][j];
+            }
+        } 
+    }
+
+    visible
+}
 
 fn task2(forest: &Vec<Vec<i8>>) {
     // räkna hur många träd bort man ser, inklusive det träd som blockar vyn
     // nord * väst * syd * öst
-    //
     
-    let mut scenic_score = HashMap::new();
     for i in 0..forest.len() {
         // north, south, west, east
         let mut dirs: [u32; 4] = [0,0,0,0];
         for j in 0..forest[i].len() {
             dirs = calc((i as i8, j as i8), &forest);
+
 
         }
 
