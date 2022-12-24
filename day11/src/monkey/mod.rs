@@ -1,19 +1,20 @@
 #[derive (Debug, Default, Clone)]
 pub struct Monkey {
-    items: Vec<i32>,
-    op_value: i32,
+    pub items: Vec<i64>,
+    op_value: i64,
     delim: char,
-    test_value: i32,
+    test_value: i64,
     r#true: usize,
     r#false: usize,
+    pub mb: i64,
 }
 
 impl Monkey {
-    fn new(items: Vec<i32>, op_value: i32, delim: char, test_value: i32, r#true: usize, r#false: usize) -> Monkey {
-        Monkey { items, op_value, delim, test_value, r#true, r#false }
+    fn new(items: Vec<i64>, op_value: i64, delim: char, test_value: i64, r#true: usize, r#false: usize) -> Monkey {
+        Monkey { items, op_value, delim, test_value, r#true, r#false, mb: 0 }
     }
 
-    fn test(&self, item: i32) -> usize {
+    pub fn test(&self, item: i64) -> usize {
         // tar reda på vilken apa objektet ska skickas till
         if item % &self.test_value == 0 {
             return self.r#true
@@ -22,26 +23,29 @@ impl Monkey {
         }
     }
 
-    fn op(&self, item: i32) -> i32 {
-        match self.delim {
-            '*' => {if self.op_value == -1 {
-                    item * item
-                } else {
-                    item * self.op_value
-                } 
-            },
-            '+' =>  {
-                item + self.op_value 
-            },
-            _ => panic!("damn")
-        }
-    }
+    pub fn op(&mut self) -> Option<i64> {
+        if self.items.len() > 0 {
+            let mut item = self.items.remove(0);
+            match self.delim {
+                '*' => { if self.op_value == -1 {
+                        item *= item;
+                    } else {
+                        item *= self.op_value;
+                    } 
+                },
+                '+' =>  {
+                    item += self.op_value ;
+                },
+                _ => panic!("damn")
+            }
 
-    fn add(mut self, item: i32) {
-        let val = self.op(item);
-        self.items.push(val);
+            return Some(item / 3);
+        }
+        None
+
     }
 }
+
 pub fn populate_monkeytown() -> Vec<Monkey> { 
     let mut monkeylist: Vec<Monkey> = vec!();
 
@@ -123,6 +127,53 @@ pub fn populate_monkeytown() -> Vec<Monkey> {
                         5, 
                         4, 
                         5);
+    monkeylist.push(m);
+
+    monkeylist
+}
+
+
+pub fn populate_monkeytest() -> Vec<Monkey> { 
+    let mut monkeylist: Vec<Monkey> = vec!();
+
+    // 0
+    let m = Monkey::new(
+                        [79, 98].to_vec(),
+                        19, 
+                        '*', 
+                        23, 
+                        2, 
+                        3);
+    monkeylist.push(m);
+    
+    // 1
+    let m = Monkey::new(
+                        [54, 65, 75, 74].to_vec(),
+                        6, 
+                        '+', 
+                        19, 
+                        2, 
+                        0);
+    monkeylist.push(m);
+
+    // 2
+    let m = Monkey::new(
+                        [79, 60, 97].to_vec(),
+                        -1, 
+                        '*', 
+                        13, 
+                        1, 
+                        3);
+    monkeylist.push(m);
+
+    // 3
+    let m = Monkey::new(
+                        [74].to_vec(),
+                        3, 
+                        '+', 
+                        17, 
+                        0, 
+                        1);
     monkeylist.push(m);
 
     monkeylist
