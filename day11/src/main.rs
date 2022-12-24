@@ -37,8 +37,6 @@ mod tests {
                 // }
             }
         }
-        for monkey in monkeys {
-            println!("{}", monkey.mb);
-        }
+        assert_eq!([101, 95, 7, 105], [monkeys[0].mb, monkeys[1].mb, monkeys[2].mb, monkeys[3].mb]);
     }
 }
