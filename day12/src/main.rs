@@ -1,44 +1,40 @@
+mod astar;
+mod bfs;
 
+use astar::asearch;
 // får bara röra sig till 1 nivå högre per steg:
 // om position är på 'm' så får man gå till 'n' men inte till 'o'
 // däremot får man gå neråt hur många steg som helst: 
 // 'o' -> 'a'
-
 // implementera A* search
 
-fn parse(input: &str) -> Result<String, std::io::Error>{
+// BFS
+
+
+fn parse(input: &str) -> Result<String, std::io::Error> {
     std::fs::read_to_string(input)
-}
-
-fn find_start(input: &str) -> (i32, i32){
-    // if coordinates is 'S'
-    let mut start = (0,0);
-    start
-}
-
-fn find_goal(input: &str) -> (i32, i32){
-    // if coordinates is 'E'
-    let mut goal = (0,0);
-    goal
-}
-
-fn manhattan(start: &(i32, i32), goal: &(i32, i32)) -> i32 {
-    todo!()
-
 }
 
 fn main() {
     let input = parse("input.txt").unwrap();
+    println!("BFS - Single starting position: {}", bfs::solve(&input));
+    println!("BFS - All starting positions: {}", bfs::solve2(&input));
+    println!("A* - does NOT always give the absolute best path...: {}", asearch(&input));
+}
 
-    let start: (i32, i32) = find_start(&input);
-    let goal: (i32, i32) = find_goal(&input);
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    let manhattan = manhattan(&start, &goal);
-
-
-
-
-
-
+    #[test]
+    fn test1() {
+        let input = parse("test.txt").unwrap();
+        assert_eq!(31, asearch(&input));
+    }
     
+    #[test]
+    fn test2() {
+        let input = parse("test.txt").unwrap();
+        assert_eq!(31, bfs::solve(&input));
+    }
 }
