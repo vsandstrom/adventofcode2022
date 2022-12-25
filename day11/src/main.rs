@@ -1,7 +1,5 @@
 mod monkey;
-use monkey::{populate_monkeytown, populate_monkeytest, Monkey, calc_monkeybusiness};
-
-
+use monkey::{populate_monkeytown, Monkey, calc_monkeybusiness};
 fn main() {
     let mut monkeys: Vec<Monkey> = populate_monkeytown();
 
@@ -42,6 +40,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use monkey::populate_monkeytest;
 
     #[test]
     fn test_1() {
