@@ -1,17 +1,19 @@
 #[derive (Debug, Default, Clone)]
+
 pub struct Monkey {
     pub items: Vec<i64>,
     op_value: i64,
     delim: char,
-    test_value: i64,
+    pub test_value: i64,
     r#true: usize,
     r#false: usize,
     pub mb: i64,
+    gcd: i64
 }
 
 impl Monkey {
     fn new(items: Vec<i64>, op_value: i64, delim: char, test_value: i64, r#true: usize, r#false: usize) -> Monkey {
-        Monkey { items, op_value, delim, test_value, r#true, r#false, mb: 0 }
+        Monkey { items, op_value, delim, test_value, r#true, r#false, mb: 0, gcd: 0 }
     }
 
     pub fn test(&self, item: i64) -> usize {
@@ -28,7 +30,7 @@ impl Monkey {
             let mut item = self.items.remove(0);
             match self.delim {
                 '*' => { if self.op_value == -1 {
-                        item *= item;
+                    dbg!(item *= item);
                     } else {
                         item *= self.op_value;
                     } 
@@ -44,6 +46,39 @@ impl Monkey {
         None
 
     }
+    
+    pub fn op2(&mut self, gcd: i64) -> Option<i64> {
+        if self.items.len() > 0 {
+            let mut item = self.items.remove(0);
+            match self.delim {
+                '*' => { if self.op_value == -1 {
+                    dbg!(item *= item);
+                    } else {
+                        item *= self.op_value;
+                    } 
+                },
+                '+' =>  {
+                    item += self.op_value ;
+                },
+                _ => panic!("damn")
+            }
+
+            return Some(item % gcd);
+        }
+        None
+
+    }
+
+}
+
+pub fn calc_monkeybusiness(monkeys: Vec<Monkey>) -> i128 {
+    let mut mb_vec: Vec<i64> = vec!();
+    for monkey in monkeys {
+        mb_vec.push(monkey.mb);
+    }
+
+    mb_vec.sort_unstable();
+    return mb_vec.pop().unwrap() as i128 * mb_vec.pop().unwrap() as i128;
 }
 
 pub fn populate_monkeytown() -> Vec<Monkey> { 
