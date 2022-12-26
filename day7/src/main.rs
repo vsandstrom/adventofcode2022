@@ -2,7 +2,7 @@
 // skapa en hashmap som kan kolla undermappar rekursivt.
 mod rub;
 use crate::rub::{task1, task2};
-use std::{collections::HashMap, cell::RefCell};
+use std::{collections::HashMap, sync::{Mutex, Arc}, ops::Deref};
 use regex::Regex;
 
 #[derive (Debug, Clone)]
@@ -11,35 +11,25 @@ struct Dir {
     sum: u32
 }
 
-fn traverse_hashtable(startpos: &str,hashdir: &mut RefCell<HashMap<&str, Dir>>) -> u32 {
+unsafe fn traverse_hashtable<'a>(startpos: &'a str,hashdir: &'a mut HashMap<&str, Dir>) -> u32 {
     // let mut dirs: Vec<String> = vec!();
-    let mut hs = hashdir.clone();
     let mut sum = 0;
-    if let Some(temp) = hs.get_mut().get_mut(startpos) {
-        if temp.dirs.len() == 0 {
-            return temp.sum;
-        } else {
-            for key in temp.dirs.as_slice() {
-                // let key = temp.dirs.pop().unwrap();
-                sum += traverse_hashtable(&key.to_string(), hashdir);
-                println!("{} {}", key, sum);
+        if let Some(temp) = &hashdir.get_mut(startpos) {
+            if temp.dirs.len() == 0 {
+                return temp.sum;
+            } else {
+                for key in temp.dirs.as_slice() {
+                    // let key = temp.dirs.pop().unwrap();
+                    sum += traverse_hashtable(&key.to_string(), &mut (hashdir.clone()));
+                    println!("{} {}", key, sum);
+                }
             }
-            // for dir in temp.dirs.pop() {
-            //     let mut dirhs = hashdir.clone();
-            //     let key: &str = &dir.clone();
-            //     let mut sum = 0; 
-            //     if let Some(obj) = dirhs.get_mut().get_mut(key){
-            //         sum += traverse_hashtable(key, hashdir);
-            //         obj.sum += sum;
-            //     }
-            //
-            // }
-        }
-        return temp.sum + sum;
-    } else {
-        0
+            return temp.sum + sum;
+        } else {
+            0
     }
 }
+
 
 
 fn populate_hashtable(input: &str) -> u32 {
@@ -76,7 +66,7 @@ fn populate_hashtable(input: &str) -> u32 {
     hashdir.insert(dir.clone(), entry.clone());
 
 
-    let mut hd = RefCell::new(hashdir.clone());
+    let mut hd = hashdir.clone();
 
     println!("{:?}", hashdir);
 
@@ -90,11 +80,11 @@ fn populate_hashtable(input: &str) -> u32 {
         }
     }
 
-    hd.get_mut().get_mut("/").unwrap().sum += rootsum;
+    hd.get_mut("/").unwrap().sum += rootsum;
 
 
 
-    for e in hd.get_mut().iter() {
+    for e in hd.iter() {
         match e {
             (str, obj) => {
                 if obj.dirs.len() > 0 {
